@@ -2,7 +2,7 @@ import pandas as pd
 import os
 
 class SignalHistoryLogger:
-    def __init__(self, filename='signal_history.csv'):
+    def __init__(self, filename='../validation/signal_history.csv'):
         self.filename = filename
         if os.path.exists(self.filename):
             self.df = pd.read_csv(self.filename, parse_dates=['timestamp'])

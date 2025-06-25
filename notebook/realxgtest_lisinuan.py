@@ -1,19 +1,16 @@
 import pandas as pd
-import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import talib
-import os
 import numpy as np
 import joblib  # 添加joblib用于加载模型
 from binance.client import Client
-from config.load_env import load_keys
 
 from binance.client import Client
 # sys.path.append(os.path.abspath(".."))  # root /PycharmProjects/MMAT
 from config.load_env import load_keys
 
 # 加载XGBoost模型和特征列表
-MODEL_PATH = 'improved_signal_model.pkl'  # 替换为你的模型路径
+MODEL_PATH = '../models/improved_signal_model.pkl'  # 替换为你的模型路径
 FEATURE_NAMES_PATH = 'selected_features.pkl'  # 替换为你的特征列表路径
 
 # 加载模型和特征
@@ -346,12 +343,11 @@ def evaluate_patterns(df, patterns_dict, window=5, threshold=0.001):
 
     return results
 
-import os
+
 import pandas as pd
 import numpy as np
-import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from signal_logger import SignalHistoryLogger
+
 
 def plot_realtime_signals(df, symbol='BTCUSDT', data_range=50, output_dir=r'C:\Users\86159\Desktop\MQF\mqf635\final_groupwork\plots', signal_logger=None):
     import os
@@ -522,8 +518,8 @@ def plot_realtime_signals(df, symbol='BTCUSDT', data_range=50, output_dir=r'C:\U
         print(f"❌ Error saving HTML: {e}")
 
 import atexit
-from prediction_logger import PredictionLogger
-from signal_logger import SignalHistoryLogger
+from signals.prediction_logger import PredictionLogger
+from signals.signal_logger import SignalHistoryLogger
 import time
 import talib
 from binance.client import Client
@@ -537,11 +533,12 @@ def update_signal(signal_logger, signal_type, timestamp, price, confidence_str):
 
 # Initialize loggers
 logger = PredictionLogger()
-signal_logger = SignalHistoryLogger(filename=r'C:\Users\86159\Desktop\MQF\mqf635\final_groupwork\signal_history.csv')
+import os
+signal_logger = SignalHistoryLogger(filename="../validation/signal_history.csv")
 
 # Register atexit handlers to save logs on program exit
-atexit.register(lambda: logger.save_to_csv("TestLive_prediction_log.csv"))
-atexit.register(lambda: signal_logger.save_to_csv("signal_history.csv"))
+atexit.register(lambda: logger.save_to_csv("../validation/TestLive_prediction_log.csv"))
+atexit.register(lambda: signal_logger.save_to_csv("../validation/signal_history.csv"))
 
 def run_realtime_signals(api_key, api_secret, symbol='BTCUSDT',
                          interval=Client.KLINE_INTERVAL_1MINUTE,
@@ -611,8 +608,8 @@ def run_realtime_signals(api_key, api_secret, symbol='BTCUSDT',
 
 
 import atexit
-from prediction_logger import PredictionLogger
-from signal_logger import SignalHistoryLogger
+from signals.prediction_logger import PredictionLogger
+from signals.signal_logger import SignalHistoryLogger
 from binance.client import Client
 import pandas as pd
 import talib
@@ -632,8 +629,7 @@ def main(realtime=True, debug=False):
     use_api = realtime
     symbol = 'BTCUSDT'
     csv_path = r'C:\Users\86159\Desktop\MQF\mqf635\final_groupwork\btc_1min.csv'
-    signal_log_path = r'C:\Users\86159\Desktop\MQF\mqf635\final_groupwork\signal_history.csv'
-
+    signal_log_path = '../validation/signal_history.csv'
 
     # Initialize loggers
     signal_logger = SignalHistoryLogger(filename=signal_log_path)

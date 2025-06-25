@@ -53,7 +53,7 @@ class PredictionLogger:
         """
         return pd.DataFrame(self.log)
 
-    def save_to_csv(self, path='prediction_log.csv'):
+    def save_to_csv(self, path='../validation/prediction_log.csv'):
         """
         Save the prediction log to a CSV file.
         """

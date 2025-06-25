@@ -179,3 +179,15 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Jupyter cell metadata
+**/.ipynb_checkpoints/
+**/.ipynb_metadata/
+
+# Cache folders
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.idea/
