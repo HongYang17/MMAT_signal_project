@@ -1,5 +1,6 @@
-import pandas as pd
 import os
+import pandas as pd
+
 
 class SignalHistoryLogger:
     def __init__(self, filename='../validation/signal_history.csv'):
@@ -53,5 +54,3 @@ class SignalHistoryLogger:
         }
         if signal_type in opposite:
             self.remove_by_type_and_timestamp(opposite[signal_type], timestamp)
-
-

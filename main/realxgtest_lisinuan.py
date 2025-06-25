@@ -1,17 +1,25 @@
+import os
+import time
+import atexit
+import traceback
+
+import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
+from dotenv import load_dotenv
+from binance.client import Client
 from plotly.subplots import make_subplots
 import talib
-import numpy as np
-import joblib  # 添加joblib用于加载模型
-from binance.client import Client
 
-from binance.client import Client
+from signals.prediction_logger import PredictionLogger
+from signals.signal_logger import SignalHistoryLogger
+
 # sys.path.append(os.path.abspath(".."))  # root /PycharmProjects/MMAT
 from config.load_env import load_keys
 
 # 加载XGBoost模型和特征列表
 MODEL_PATH = '../models/improved_signal_model.pkl'  # 替换为你的模型路径
-FEATURE_NAMES_PATH = 'selected_features.pkl'  # 替换为你的特征列表路径
+FEATURE_NAMES_PATH = '../models/selected_features.pkl'  # 替换为你的特征列表路径
 
 # 加载模型和特征
 try:
@@ -26,8 +34,6 @@ except Exception as e:
 keys = load_keys()
 client = Client(keys['api_key'], keys['secret_key'])
 
-from binance.client import Client
-from dotenv import load_dotenv
 try:
     from config.load_env import load_keys
 except ImportError:
@@ -119,10 +125,6 @@ def calculate_patterns(df):
     Detect candlestick patterns and assign TA-Lib raw outputs for ±100 signals.
     Also generates Signal_ columns that map strong bullish (1), strong bearish (-1), and neutral (0).
     """
-
-    import talib
-    import numpy as np
-
     patterns = {
         # Bullish
         'Hammer': talib.CDLHAMMER,
@@ -292,7 +294,6 @@ def generate_xgboost_signals(df, signal_logger=None):
 
     except Exception as e:
         print(f"❌ Error in XGBoost prediction: {e}")
-        import traceback
         traceback.print_exc()
 
     return df
@@ -343,18 +344,7 @@ def evaluate_patterns(df, patterns_dict, window=5, threshold=0.001):
 
     return results
 
-
-import pandas as pd
-import numpy as np
-from plotly.subplots import make_subplots
-
-
 def plot_realtime_signals(df, symbol='BTCUSDT', data_range=50, output_dir=r'C:\Users\86159\Desktop\MQF\mqf635\final_groupwork\plots', signal_logger=None):
-    import os
-    import numpy as np
-    import pandas as pd
-    import plotly.graph_objects as go
-    from plotly.subplots import make_subplots
 
     if signal_logger is None:
         raise ValueError("signal_logger must be provided")
@@ -517,14 +507,6 @@ def plot_realtime_signals(df, symbol='BTCUSDT', data_range=50, output_dir=r'C:\U
     except Exception as e:
         print(f"❌ Error saving HTML: {e}")
 
-import atexit
-from signals.prediction_logger import PredictionLogger
-from signals.signal_logger import SignalHistoryLogger
-import time
-import talib
-from binance.client import Client
-
-
 def update_signal(signal_logger, signal_type, timestamp, price, confidence_str):
     """更新信号记录：删除反向信号，再添加新信号"""
     signal_logger.remove_opposite_signal(timestamp, signal_type)
@@ -533,7 +515,6 @@ def update_signal(signal_logger, signal_type, timestamp, price, confidence_str):
 
 # Initialize loggers
 logger = PredictionLogger()
-import os
 signal_logger = SignalHistoryLogger(filename="../validation/signal_history.csv")
 
 # Register atexit handlers to save logs on program exit
@@ -606,14 +587,6 @@ def run_realtime_signals(api_key, api_secret, symbol='BTCUSDT',
             print(f"Error in real-time loop: {e}. Retrying in 60 seconds.")
             time.sleep(60)
 
-
-import atexit
-from signals.prediction_logger import PredictionLogger
-from signals.signal_logger import SignalHistoryLogger
-from binance.client import Client
-import pandas as pd
-import talib
-import os
 
 def main(realtime=True, debug=False):
     """

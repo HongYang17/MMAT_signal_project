@@ -11,9 +11,8 @@
 ### 2. On the next candle, the actual return is compared to check if the prediction was accurate.
 ### 3. Result is logged and used to update the hit rate in real time.
 
-
 import pandas as pd
-from datetime import datetime
+
 
 class PredictionLogger:
     def __init__(self):

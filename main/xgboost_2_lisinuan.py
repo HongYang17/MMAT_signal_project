@@ -1,23 +1,22 @@
-import pandas as pd
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-import talib
-import os
+import joblib
 import numpy as np
-
 import pandas as pd
-import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 import talib
 import xgboost as xgb
-from sklearn.model_selection import train_test_split, TimeSeriesSplit
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import Pipeline
+
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
-import joblib
-from sklearn.metrics import classification_report, roc_auc_score
-import matplotlib
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score, f1_score,
+    confusion_matrix, classification_report, roc_auc_score,
+    roc_curve, auc
+)
+from sklearn.model_selection import train_test_split, TimeSeriesSplit
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
 matplotlib.rcParams['font.sans-serif'] = ['SimHei']
 matplotlib.rcParams['axes.unicode_minus'] = False
 
@@ -26,9 +25,6 @@ def calculate_patterns(df):
     Detect candlestick patterns and assign TA-Lib raw outputs for ±100 signals.
     Also generates Signal_ columns that map strong bullish (1), strong bearish (-1), and neutral (0).
     """
-
-    import talib
-    import numpy as np
 
     patterns = {
         # Bullish
@@ -325,8 +321,6 @@ def evaluate_model(pipeline, X, y):
 
 def plot_roc_curve(y_true, y_proba):
     """绘制ROC曲线"""
-    from sklearn.metrics import roc_curve, auc
-    import matplotlib.pyplot as plt
 
     fpr, tpr, _ = roc_curve(y_true, y_proba)
     roc_auc = auc(fpr, tpr)
@@ -360,8 +354,8 @@ def main(df):
         evaluate_model(pipeline, X, y)
 
         # 保存整个Pipeline
-        joblib.dump(pipeline, 'trading_model_pipeline.pkl')
-        joblib.dump(feature_names, 'feature_names.pkl')
+        joblib.dump(pipeline, '../trading_model_pipeline.pkl')
+        joblib.dump(feature_names, '../feature_names.pkl')
         print("\n模型训练完成并已保存!")
 
     return pipeline
@@ -405,7 +399,6 @@ def calculate_basic_indicators(df):
 
 def plot_feature_importance(model, feature_names, top_n=20):
     """可视化特征重要性"""
-    import matplotlib.pyplot as plt
 
     importance = model.feature_importances_
     indices = np.argsort(importance)[-top_n:]
@@ -476,9 +469,6 @@ if __name__ == "__main__":
 
     # === 8. 混淆矩阵可视化 ===
     print("\n绘制混淆矩阵...")
-    import seaborn as sns
-    import matplotlib.pyplot as plt
-    from sklearn.metrics import confusion_matrix
 
     cm = confusion_matrix(y, y_pred)
     labels = sorted(list(set(y)))  # 应该是 [0, 1]
