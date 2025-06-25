@@ -123,6 +123,7 @@ def calculate_basic_indicators(df: pd.DataFrame) -> pd.DataFrame:
 
     # === Moving Averages (fast + volatility smoothing) ===
     df['MA5'] = talib.SMA(df['close'], timeperiod=5)
+    df['MA20'] = talib.SMA(df['close'], timeperiod=20)
     df['mean_ATR'] = df['ATR'].rolling(window=20, min_periods=10).mean()
 
     # === Drop rows with NA values from indicator initialization ===
@@ -216,7 +217,7 @@ def calculate_additional_features(df: pd.DataFrame) -> pd.DataFrame:
     # === Price & Volume Movement Features ===
     features['price_change'] = df['close'].pct_change()
     features['volume_change'] = df['volume'].pct_change()
-    features['volume_ratio'] = df['volume'] / df['Volume_MA'].replace(0, pd.NA)
+    features['volume_ratio'] = df['volume'] / df['Volume_MA20'].replace(0, pd.NA)
 
     # === Indicator Divergence Features ===
     features['rsi_divergence'] = df['RSI'] - df['RSI'].rolling(5).mean().shift(1)
