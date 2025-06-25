@@ -11,10 +11,14 @@
 ### 2. On the next candle, the actual return is compared to check if the prediction was accurate.
 ### 3. Result is logged and used to update the hit rate in real time.
 
+import os
 import pandas as pd
 
-
 class PredictionLogger:
+    """
+    Tracks predictions and computes hit rate for real-time trading signals.
+    """
+
     def __init__(self):
         self.log = []
 
@@ -52,10 +56,19 @@ class PredictionLogger:
         """
         return pd.DataFrame(self.log)
 
-    def save_to_csv(self, path='../validation/prediction_log.csv'):
+    def save_to_csv(self, path=None):
         """
-        Save the prediction log to a CSV file.
+        Save the prediction log to a CSV file. Creates directories if needed.
         """
+        if not path:
+            # Default to ../validation/prediction_log.csv relative to this file
+            base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+            path = os.path.join(base_dir, 'validation', 'prediction_log.csv')
+
         df = self.to_dataframe()
-        df.to_csv(path, index=False)
-        print(f"[Logger] Saved {len(df)} predictions to {path}")
+        try:
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            df.to_csv(path, index=False)
+            print(f"[Logger] Saved {len(df)} predictions to {path}")
+        except Exception as e:
+            print(f"[Logger] Failed to save prediction log: {e}")

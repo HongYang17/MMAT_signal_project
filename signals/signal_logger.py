@@ -1,21 +1,33 @@
 import os
-
 import pandas as pd
 
 
 class SignalHistoryLogger:
-    def __init__(self, filename='../validation/signal_history.csv'):
+    """
+    Tracks historical trading signals with timestamps, type, price, and optional trigger text.
+    """
+
+    def __init__(self, filename=None):
+        # Default to ../validation/signal_history.csv
+        if filename is None:
+            base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+            filename = os.path.join(base_dir, 'validation', 'signal_history.csv')
+
         self.filename = filename
-        if os.path.exists(self.filename):
-            self.df = pd.read_csv(self.filename, parse_dates=['timestamp'])
-        else:
+
+        try:
+            if os.path.exists(self.filename):
+                self.df = pd.read_csv(self.filename, parse_dates=['timestamp'])
+            else:
+                self.df = pd.DataFrame(columns=['timestamp', 'type', 'price', 'trigger'])
+        except Exception as e:
+            print(f"[SignalLogger] Failed to load existing file: {e}")
             self.df = pd.DataFrame(columns=['timestamp', 'type', 'price', 'trigger'])
 
     def add_signal(self, signal_type, timestamp, price, trigger=None):
-        # 如果已经有该时间戳的该类型信号，则先删除（防止重复）
+        """Adds a signal after removing duplicates at same timestamp and type."""
         self.df = self.df[~((self.df['timestamp'] == timestamp) & (self.df['type'] == signal_type))]
 
-        # 添加新信号
         new_row = {
             'timestamp': timestamp,
             'type': signal_type,
@@ -25,11 +37,11 @@ class SignalHistoryLogger:
         self.df = pd.concat([self.df, pd.DataFrame([new_row])], ignore_index=True)
 
     def remove_by_timestamp(self, timestamp):
-        """移除所有该时间戳的记录（无论方向）"""
+        """Removes all signals at a given timestamp."""
         self.df = self.df[self.df['timestamp'] != timestamp]
 
     def has_signal(self, timestamp, signal_type):
-        """检查是否已有该时间戳的该类型信号"""
+        """Checks whether a signal exists for a given type and timestamp."""
         if self.df.empty:
             return False
         return not self.df[
@@ -37,18 +49,25 @@ class SignalHistoryLogger:
         ].empty
 
     def get_history(self):
+        """Returns a copy of the full signal log."""
         return self.df.copy()
 
     def save_to_csv(self, filename=None):
+        """Saves the signal log to CSV. Creates folders if necessary."""
         path = filename if filename else self.filename
-        self.df.to_csv(path, index=False)
+        try:
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            self.df.to_csv(path, index=False)
+            print(f"[SignalLogger] Saved {len(self.df)} signals to {path}")
+        except Exception as e:
+            print(f"[SignalLogger] Failed to save CSV: {e}")
 
     def remove_by_type_and_timestamp(self, signal_type, timestamp):
-        """移除指定类型和时间戳的信号"""
+        """Removes a signal by specific type and timestamp."""
         self.df = self.df[~((self.df['timestamp'] == timestamp) & (self.df['type'] == signal_type))]
 
     def remove_opposite_signal(self, timestamp, signal_type):
-        """根据信号类型自动删除相反方向信号"""
+        """Automatically removes the opposite directional signal if it exists."""
         opposite = {
             'xgboost_bullish': 'xgboost_bearish',
             'xgboost_bearish': 'xgboost_bullish'
