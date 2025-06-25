@@ -1,21 +1,20 @@
+import atexit
 import os
 import time
-import atexit
 import traceback
 
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-from dotenv import load_dotenv
-from binance.client import Client
-from plotly.subplots import make_subplots
 import talib
-
-from signals.prediction_logger import PredictionLogger
-from signals.signal_logger import SignalHistoryLogger
+from binance.client import Client
+from dotenv import load_dotenv
+from plotly.subplots import make_subplots
 
 # sys.path.append(os.path.abspath(".."))  # root /PycharmProjects/MMAT
 from config.load_env import load_keys
+from signals.prediction_logger import PredictionLogger
+from signals.signal_logger import SignalHistoryLogger
 
 # 加载XGBoost模型和特征列表
 MODEL_PATH = '../models/improved_signal_model.pkl'  # 替换为你的模型路径
