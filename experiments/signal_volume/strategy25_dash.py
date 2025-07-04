@@ -13,11 +13,11 @@ from binance.client import Client
 from dash import Dash, dcc, html
 from dash.dependencies import Output, Input
 import dash_bootstrap_components as dbc
-from signal_logger import SignalHistoryLogger
+from logs.signal_logger import SignalHistoryLogger
 
 # ============ Binance & Logger Setup ============
 client = Client(api_key='your_api_key', api_secret='your_api_secret')
-signal_logger = SignalHistoryLogger(filename="D:/My File/SMU/QF 635/MMAT/signal_history_xie.csv")
+signal_logger = SignalHistoryLogger("../data_experiment/volume_signal.csv")
 model = joblib.load("lgb_model_strategy25.pkl")  # Load the trained model
 
 # ============ Fetch Data ============
