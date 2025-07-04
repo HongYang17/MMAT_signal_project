@@ -26,16 +26,22 @@ class SignalHistoryLogger:
 
     def add_signal(self, signal_type, timestamp, price, trigger=None):
         """Add a signal to the log, replacing any existing signal of the same type at the same timestamp."""
-        # Remove any existing signal of the same type at the same timestamp
         self.remove_by_type_and_timestamp(signal_type, timestamp)
 
-        # Create a new row as a dictionary
+        # Ensure timestamp is UTC and trigger is a string
         new_row = {
             'timestamp': pd.to_datetime(timestamp, utc=True),
-            'type': signal_type,
-            'price': price,
-            'trigger': trigger
+            'type': str(signal_type),
+            'price': float(price),
+            'trigger': '' if trigger is None else str(trigger)
         }
+
+        new_df = pd.DataFrame([new_row])
+
+        # Ensure all required columns exist and have proper dtype
+        new_df = new_df.astype(self.df.dtypes.to_dict())
+
+        self.df = pd.concat([self.df, new_df], ignore_index=True)
 
         # Append the new row to the dataframe
         self.df = pd.concat([self.df, pd.DataFrame([new_row])], ignore_index=True)

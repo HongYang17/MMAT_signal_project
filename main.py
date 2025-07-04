@@ -1,11 +1,10 @@
+import os
 import time
 import traceback
 
-import os
 import pandas as pd
 import pytz
 
-from datetime import datetime, timedelta, timezone
 from config import config
 from data_fetching.data_fetcher import update_binance_csv
 from logs.prediction_logger import PredictionLogger
@@ -18,6 +17,7 @@ from train_model.vol_model import VolatilityModel
 from validation.bootstrap import bootstrap_accuracy_pvalue
 from validation.metrics import print_classification_metrics
 from validation.pattern_evaluator import evaluate_patterns, summarize_pattern_performance
+
 
 def update_signal(signal_logger, signal_type, timestamp, price, confidence_str):
     try:

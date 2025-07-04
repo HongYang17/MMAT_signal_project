@@ -6,11 +6,11 @@ To run this project, choose **one** of the following setup methods:
 
 ---
 
-### ✅ Option 1: Conda Environment (Recommended for Windows + TA-Lib)
+### Option 1: Conda Environment (Recommended for Windows + TA-Lib)
 
 This method is ideal for full compatibility with **TA-Lib** and better dependency management.
 
-```bash
+```
 conda env create -f environment.yml
 conda activate mmat-env
 ```
@@ -25,13 +25,13 @@ To manually install it:
 
 2. Install it after activating the environment:
 
-```bash
+```
 pip install wheels/ta_lib-*.whl
 ```
 
 3. Verify it worked:
 
-```bash
+```
 python -c "import talib; print(talib.__version__)"
 ```
 
