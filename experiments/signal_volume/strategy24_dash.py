@@ -4,15 +4,16 @@ Created on Sat Jun  7 00:16:33 2025
 
 @author: XIE
 """
-import dash_bootstrap_components as dbc
-import joblib
 import pandas as pd
-import plotly.graph_objects as go
+import numpy as np
 import talib
+import joblib
 from binance.client import Client
 from dash import Dash, dcc, html
 from dash.dependencies import Output, Input
+import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import dash_bootstrap_components as dbc
 
 # ============ Binance Setup ============
 client = Client(api_key='your_api_key', api_secret='your_api_secret')

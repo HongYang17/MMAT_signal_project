@@ -4,12 +4,12 @@ Created on Sat Jun  7 04:55:37 2025
 
 @author: XIE
 """
-import joblib
-import lightgbm as lgb
 import pandas as pd
 import talib
-from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, confusion_matrix
+import lightgbm as lgb
+import joblib
 
 # 读取数据（1分钟合成5分钟）
 df_1min = pd.read_csv("BTCUSDT_1min_2024-05-01_to_2025-05-01.csv", parse_dates=['timestamp'])

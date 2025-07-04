@@ -1,7 +1,5 @@
-import os
-
 import pandas as pd
-
+import os
 
 class SignalHistoryLogger:
     def __init__(self, filename='signal_history.csv'):
