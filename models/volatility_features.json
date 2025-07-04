@@ -1,0 +1,17 @@
+{
+  "features": [
+    "ATR",
+    "NATR",
+    "mean_ATR",
+    "volatility_ratio"
+  ],
+  "importances": {
+    "ATR": 0.03348909690976143,
+    "NATR": 0.32601481676101685,
+    "mean_ATR": 0.013615909963846207,
+    "volatility_ratio": 0.29224392771720886
+  },
+  "sklearn_version": "2.3.0",
+  "xgboost_version": "3.0.2",
+  "last_trained": "2025-07-04T04:01:13.302181"
+}

@@ -1,11 +1,12 @@
-import pandas as pd
 from datetime import datetime
 
-from data.data_fetcher import update_binance_csv
-from signals.indicator_module import TechnicalIndicatorGenerator, FeatureEngineer
+import pandas as pd
+
+from data_fetching.data_fetcher import update_binance_csv
 from signals.pattern_detector import CandlestickPatternDetector
-from signals.vol_model import VolatilityModel
-from signals.model import SignalModel
+from signals.technical_indicators import TechnicalIndicatorGenerator, FeatureEngineer
+from train_model.signal_model import SignalModel
+from train_model.vol_model import VolatilityModel
 from validation.metrics import evaluate_model
 from validation.pattern_evaluator import evaluate_patterns, summarize_pattern_performance
 
